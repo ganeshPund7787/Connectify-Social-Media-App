@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 
 const Page = () => {
-  return <Button>Page</Button>;
+  return <Button>Front Page </Button>;
 };
 
 export default Page;
