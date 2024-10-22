@@ -1,6 +1,6 @@
 import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
-import { getUserDataSelect } from "@/lib/types";
+// import { getUserDataSelect } from "@/lib/types";
 import { formatNumber } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { unstable_cache } from "next/cache";
@@ -37,7 +37,7 @@ async function WhoToFollow() {
         },
       },
     },
-    select: getUserDataSelect(user.id),
+    // select: getUserDataSelect(user.id),
     take: 5,
   });
 
@@ -62,7 +62,7 @@ async function WhoToFollow() {
               </div>
             </Link>
           </UserTooltip>
-          <FollowButton
+          {/* <FollowButton
             userId={user.id}
             initialState={{
               followers: user._count.followers,
@@ -70,7 +70,7 @@ async function WhoToFollow() {
                 ({ followerId }) => followerId === user.id,
               ),
             }}
-          />
+          /> */}
         </div>
       ))}
     </div>
