@@ -1,8 +1,12 @@
+import { Toaster } from "@/components/ui/toaster";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import localFont from "next/font/local";
+import { extractRouterConfig } from "uploadthing/server";
+// import { fileRouter } from "./api/uploadthing/core";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
+import ReactQueryProvider from "./ReactQueryProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -16,7 +20,7 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: {
     template: "%s | bugbook",
-    default: "Connectify",
+    default: "bugbook",
   },
   description: "The social media app for powernerds",
 };
@@ -28,15 +32,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        {/* <NextSSRPlugin routerConfig={extractRouterConfig(fileRouter)} /> */}
+        <ReactQueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </ReactQueryProvider>
         <Toaster />
       </body>
     </html>
