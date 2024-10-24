@@ -1,6 +1,7 @@
 "use client";
 
 import InfiniteScrollContainer from "@/components/InfiniteScrollContainer";
+import DeletePostDialog from "@/components/posts/DeletePostDialog";
 import Post from "@/components/posts/Post";
 import PostsLoadingSkeleton from "@/components/posts/PostsLoadingSkeleton";
 import kyInstance from "@/lib/ky";
@@ -28,7 +29,6 @@ export default function ForYouFeed() {
     initialPageParam: null as string | null,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
-
 
   const posts = data?.pages.flatMap((page) => page.posts) || [];
 
@@ -61,6 +61,7 @@ export default function ForYouFeed() {
         <Post key={post.id} post={post} />
       ))}
       {isFetchingNextPage && <Loader2 className="mx-auto my-3 animate-spin" />}
+      <DeletePostDialog open={false} onClose={() => {}} post={posts[0]} />
     </InfiniteScrollContainer>
   );
 }

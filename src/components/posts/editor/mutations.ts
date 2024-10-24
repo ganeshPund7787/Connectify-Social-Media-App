@@ -39,6 +39,14 @@ export function useSubmitPostMutation() {
         },
       );
 
+      // Optional // queryClient.invalidateQueries(queryFilter);
+
+      queryClient.invalidateQueries({
+        queryKey: queryFilter.queryKey,
+        predicate(query) {
+          return !query.state.data;
+        },
+      });
       toast({
         description: "Post Created",
       });
