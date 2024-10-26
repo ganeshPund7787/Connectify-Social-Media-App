@@ -20,7 +20,7 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: {
     template: "%s | Connectify",
-    default: "bugbook",
+    default: "Connectify",
   },
   description: "The social media app for powernerds",
 };
