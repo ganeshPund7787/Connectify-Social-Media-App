@@ -16,6 +16,7 @@ export default function UserLinkWithTooltip({
   children,
   username,
 }: UserLinkWithTooltipProps) {
+  
   const { data } = useQuery({
     queryKey: ["user-data", username],
     queryFn: () =>
@@ -28,7 +29,7 @@ export default function UserLinkWithTooltip({
     },
     staleTime: Infinity,
   });
-
+  
   if (!data) {
     return (
       <Link

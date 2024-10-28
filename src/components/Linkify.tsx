@@ -38,6 +38,7 @@ function LinkifyUsername({ children }: LinkifyProps) {
 }
 
 function LinkifyHashtag({ children }: LinkifyProps) {
+  
   return (
     <LinkIt
       regex={/(#[a-zA-Z0-9]+)/}
