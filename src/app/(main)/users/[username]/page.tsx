@@ -12,6 +12,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import UserPosts from "./UserPosts";
 import FollowButton from "@/components/FollowButton";
+import EditProfileButton from "./EditProfileBtn";
 
 interface PageProps {
   params: { username: string };
@@ -114,8 +115,7 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
           </div>
         </div>
         {user.id === loggedInUserId ? (
-          // <EditProfileButton user={user} />
-          <button>Edit Profile </button>
+          <EditProfileButton user={user} />
         ) : (
           <FollowButton userId={user.id} initialState={followerInfo} />
         )}
