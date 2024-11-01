@@ -1,3 +1,5 @@
+// This is for upload media like image's or video's
+
 import { useToast } from "@/components/ui/use-toast";
 import { useUploadThing } from "@/lib/uploadthing";
 import { useState } from "react";
