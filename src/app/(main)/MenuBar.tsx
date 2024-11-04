@@ -48,7 +48,7 @@ export default function MenuBar({ className }: MenuBar) {
         title="Bookmarks"
         asChild
       >
-        <Link href={"/Bookmarks"}>
+        <Link href={"/bookmarks"}>
           <Bookmark />
           <span className="hidden lg:inline"> Bookmarks </span>
         </Link>
