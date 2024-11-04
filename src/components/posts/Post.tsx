@@ -14,6 +14,7 @@ import LikeButton from "./LikeButton";
 import BookmarkButton from "./BookmarkButton";
 import { useState } from "react";
 import { MessageSquare } from "lucide-react";
+import Comments from "../comments/Comments";
 
 interface PostProps {
   post: PostData;
@@ -90,9 +91,7 @@ export default function Post({ post }: PostProps) {
         />
       </div>
 
-      {showComments && (
-        <></>
-      )}
+      {showComments && <Comments post={post} />}
     </article>
   );
 }
@@ -153,9 +152,9 @@ interface CommentButtonProps {
   onClick: () => void;
 }
 
-function CommentButton({ post, onClick }: CommentButtonProps) {
+export function CommentButton({ post, onClick }: CommentButtonProps) {
   return (
-    <button onClick={onClick} className="flex items-center gap-2">
+    <button type="button" onClick={onClick} className="flex items-center gap-2">
       <MessageSquare className="size-5" />
       <span className="text-sm font-medium tabular-nums">
         {post._count.comments}{" "}

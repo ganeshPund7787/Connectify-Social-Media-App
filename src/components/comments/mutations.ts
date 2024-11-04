@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useToast } from "../ui/use-toast";
-import { submitComment } from "./actions";
+import { deleteComment, submitComment } from "./actions";
 
 export function useSubmitCommentMutation(postId: string) {
   const { toast } = useToast();
@@ -46,7 +46,7 @@ export function useSubmitCommentMutation(postId: string) {
           return !query.state.data;
         },
       });
-                                            
+
       toast({
         description: "Comment created",
       });
@@ -63,3 +63,45 @@ export function useSubmitCommentMutation(postId: string) {
   return mutation;
 }
 
+export function useDeleteCommentMutation() {
+  const { toast } = useToast();
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: deleteComment,
+    onSuccess: async (deletedComment) => {
+      const queryKey: QueryKey = ["comments", deletedComment.postId];
+
+      await queryClient.cancelQueries({ queryKey });
+
+      queryClient.setQueryData<InfiniteData<CommentsPage, string | null>>(
+        queryKey,
+        (oldData) => {
+          if (!oldData) return;
+
+          return {
+            pageParams: oldData.pageParams,
+            pages: oldData.pages.map((page) => ({
+              previousCursor: page.previousCursor,
+              comments: page.comments.filter((c) => c.id !== deletedComment.id),
+            })),
+          };
+        },
+      );
+
+      toast({
+        description: "Comment deleted",
+      });
+    },
+    onError(error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        description: "Failed to delete comment. Please try again.",
+      });
+    },
+  });
+
+  return mutation;
+}
