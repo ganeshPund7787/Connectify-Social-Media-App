@@ -58,7 +58,8 @@ export async function POST(
     if (!loggedInUser) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
-
+    
+    // This is for notification 
     const post = await prisma.post.findUnique({
       where: { id: postId },
       select: {
