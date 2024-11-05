@@ -26,9 +26,9 @@ export default function MenuBar({ className }: MenuBar) {
         title="Notification"
         asChild
       >
-        <Link href={"/notification"}>
+        <Link href={"/notifications"}>
           <Bell />
-          <span className="hidden lg:inline"> Notification </span>
+          <span className="hidden lg:inline"> Notifications </span>
         </Link>
       </Button>
       <Button
