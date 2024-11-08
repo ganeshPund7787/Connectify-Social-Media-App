@@ -1,18 +1,20 @@
+import LoadingButton from "@/components/LoadingButton";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
+import UserAvatar from "@/components/UserAvatar";
+import useDebounce from "@/hooks/useDebounce";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Check, Loader2, SearchIcon, X } from "lucide-react";
+import { useState } from "react";
+import { UserResponse } from "stream-chat";
 import { DefaultStreamChatGenerics, useChatContext } from "stream-chat-react";
 import { useSession } from "../SessionProvider";
-import { useState } from "react";
-import useDebounce from "@/hooks/useDebounce";
-import { UserResponse } from "stream-chat";
-import { useQuery } from "@tanstack/react-query";
-import UserAvatar from "@/components/UserAvatar";
-import { Check, Loader2, SearchIcon } from "lucide-react";
 
 interface NewChatDialogProps {
   onOpenChange: (open: boolean) => void;
@@ -24,6 +26,7 @@ export default function NewChatDialog({
   onChatCreated,
 }: NewChatDialogProps) {
   const { client, setActiveChannel } = useChatContext();
+
   const { toast } = useToast();
 
   const { user: loggedInUser } = useSession();
@@ -56,6 +59,33 @@ export default function NewChatDialog({
       ),
   });
 
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const channel = client.channel("messaging", {
+        members: [loggedInUser.id, ...selectedUsers.map((u) => u.id)],
+        name:
+          selectedUsers.length > 1
+            ? loggedInUser.displayName +
+              ", " +
+              selectedUsers.map((u) => u.name).join(", ")
+            : undefined,
+      });
+      await channel.create();
+      return channel;
+    },
+    onSuccess: (channel) => {
+      setActiveChannel(channel);
+      onChatCreated();
+    },
+    onError(error) {
+      console.error("Error starting chat", error);
+      toast({
+        variant: "destructive",
+        description: "Error starting chat. Please try again.",
+      });
+    },
+  });
+
   return (
     <Dialog open onOpenChange={onOpenChange}>
       <DialogContent className="bg-card p-0">
@@ -72,10 +102,10 @@ export default function NewChatDialog({
               onChange={(e) => setSearchInput(e.target.value)}
             />
           </div>
-          {/* {!!selectedUsers.length && (
+          {!!selectedUsers.length && (
             <div className="mt-4 flex flex-wrap gap-2 p-2">
               {selectedUsers.map((user) => (
-                <SelectedUserTag 
+                <SelectedUserTag
                   key={user.id}
                   user={user}
                   onRemove={() => {
@@ -86,7 +116,7 @@ export default function NewChatDialog({
                 />
               ))}
             </div>
-          )} */}
+          )}
           <hr />
           <div className="h-96 overflow-y-auto">
             {isSuccess &&
@@ -117,6 +147,15 @@ export default function NewChatDialog({
             )}
           </div>
         </div>
+        <DialogFooter className="px-6 pb-6">
+          <LoadingButton
+            disabled={!selectedUsers.length}
+            loading={mutation.isPending}
+            onClick={() => mutation.mutate()}
+          >
+            Start chat
+          </LoadingButton>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
@@ -142,6 +181,24 @@ function UserResult({ user, selected, onClick }: UserResultProps) {
         </div>
       </div>
       {selected && <Check className="size-5 text-green-500" />}
+    </button>
+  );
+}
+
+interface SelectedUserTagProps {
+  user: UserResponse<DefaultStreamChatGenerics>;
+  onRemove: () => void;
+}
+
+function SelectedUserTag({ user, onRemove }: SelectedUserTagProps) {
+  return (
+    <button
+      onClick={onRemove}
+      className="flex items-center gap-2 rounded-full border p-1 hover:bg-muted/50"
+    >
+      <UserAvatar avatarUrl={user.image} size={24} />
+      <p className="font-bold">{user.name}</p>
+      <X className="mx-2 size-5 text-muted-foreground" />
     </button>
   );
 }
