@@ -14,10 +14,24 @@ const nextConfig = {
         pathname: `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/*`,
       },
       {
-        protocol: "https",
-        hostname: "j7b9z0waff.ufs.sh",
+        protocol: 'https',
+        hostname: 'uploadthing.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'utfs.io',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.ufs.sh',
+      },
+      {
+        protocol: 'https',
+        hostname: 'j7b9z0waff.ufs.sh',
+      }
     ],
+    dangerouslyAllowSVG: true,
+    unoptimized: true,
   },
   rewrites: () => {
     return [
